@@ -24,7 +24,7 @@ fi;
 
 # generate uit-definition source 
 # !! For some reason it did not work with xerces.jar :( 
-java -cp $java_lib/xercesImpl.jar:$lib_dir/castor.jar org.exolab.castor.builder.SourceGenerator -i $xsd_dir/services.xsd -verbose -package com.tee.uit.definition -dest $dest_dir -f
+java -cp $java_lib/xercesImpl.jar:$lib_dir/castor.jar org.exolab.castor.builder.SourceGenerator -i $xsd_dir/services.xsd -verbose -package eionet.definition -dest $dest_dir -f
 echo "!!!!!!!!!!! Source OK !!!!!!!!!!"
 
 # build JAR
@@ -43,7 +43,7 @@ rm -r ../classes
 
 # no need to hold uit-definition source ??
 # comment in
-# rm -r ../src/com/tee/uit/definition
+# rm -r ../src/eionet/definition
 
 
 
