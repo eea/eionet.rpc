@@ -36,14 +36,6 @@
             <version>2.5</version>
             <scope>provided</scope>
         </dependency>
-
-        <!-- TEST dependencies -->
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>4.11</version>
-            <scope>test</scope>
-        </dependency>
     </dependencies>
 
-  </project>
+</project>
