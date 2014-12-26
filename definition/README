@@ -1,0 +1,32 @@
+This project contains the sources to build the uit-definition.jar library.
+
+The schema file is RpcServer/etc/services.xsd.
+The building script is RpcServer/build/build_jar.sh.
+This one builds both the uit-server.jar and uit-definition.jar.
+
+Search for strings "# generate uit-definition source" and
+"java -cp $libs org.apache.tools.ant.Main -f $build_file build_def_jar"
+for the part that is responsible for uit-definition.jar.
+
+Regarding the purpose of uit-definition.jar.
+it serves as a representation of RpcServer's deployment descriptor
+in Java format. For example if we have a descriptor like
+
+<Service>
+  <Method name="blahh">
+    <Value type="int"></Value>
+ </Method>
+  <Method name="bluhh">
+   <Param name="x"></Param>
+    <Value type="string"></Value>
+ </Method>
+</Service>
+
+the Castor generates handy classes where you can invoke calls like
+Service.getMethods();
+or
+Method m = Service.getMethod("method_name");
+or
+String valueType = m.getValue().getType();
+and so forth.
+

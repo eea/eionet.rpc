@@ -1,0 +1,81 @@
+<?xml version='1.0' encoding='windows-1257'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified">
+	<xs:element name="Services" type="ServicesType"/>
+	<xs:complexType name="ElementType">
+		<xs:attribute name="Type" type="xs:string" use="required"/>			
+		<xs:attribute name="Name" type="xs:string" />
+		<xs:attribute name="No" type="xs:string" />
+	</xs:complexType>
+	<xs:complexType name="StructType">
+		<xs:sequence>
+			<xs:element name="Element" type="ElementType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ArrayType">
+		<xs:sequence>
+			<xs:element name="Element" type="ElementType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+			<xs:attribute name="Type" type="xs:string" />
+	</xs:complexType>
+	<xs:complexType name="ValueType">
+		<xs:sequence>
+			<xs:element name="Struct" type = "StructType" minOccurs="0" maxOccurs="1"/> 
+			<xs:element name="Array" type = "ArrayType" minOccurs="0" maxOccurs="1"/> 
+		</xs:sequence>
+		<xs:attribute name="Type"/>
+	</xs:complexType>
+	<xs:complexType name="ParametersType">
+		<xs:sequence>
+			<xs:element name="Parameter" type = "ParameterType" minOccurs="0" maxOccurs="unbounded"/> 
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="MemberType">
+		<xs:attribute name="Type" type="xs:string" use="required"/>
+		<xs:attribute name="No" type="xs:int" use="required"/>
+		<xs:attribute name="Name" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="ParamStructType">
+		<xs:sequence>
+			<xs:element name="Member" type="MemberType" minOccurs="1" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParameterType">
+		<xs:sequence>
+			<xs:element name="ParamStruct" type="ParamStructType" minOccurs="0" maxOccurs="1"/>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" use="required"/>
+		<xs:attribute name="Type" type="xs:string" use="required"/>
+	</xs:complexType>
+
+
+	<xs:complexType name="ServicesType">
+		<xs:sequence>
+			<xs:element name="Service" type="ServiceType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="ServiceType">
+		<xs:sequence>
+			<xs:element name="Methods" type="MethodsType"/>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" use="required"/>
+		<xs:attribute name="Provider" type="xs:string" use="required"/>
+	</xs:complexType>
+
+	<xs:complexType name="MethodsType">
+		<xs:sequence>
+			<xs:element name="Method" type="MethodType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="MethodType">
+		<xs:sequence>
+			<xs:element name="Parameters" type="ParametersType"/>
+			<xs:element name="Value" type="ValueType"/>
+		</xs:sequence>
+		<xs:attribute name="Name" type="xs:string" use="required"/>
+		<xs:attribute name="Description" type="xs:string" use="optional"/>
+		<xs:attribute name="Auth" type="xs:boolean" use="optional"/>
+	</xs:complexType>
+
+</xs:schema>

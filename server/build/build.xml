@@ -1,0 +1,35 @@
+<project name="uit-definition" default="buildjar" basedir=".">
+
+  <!-- set global properties for this build -->
+  <property name="src" value="../src"/>
+  <property name="build" value="../classes"/>
+  <property name="lib.dir" value="../lib"/>
+
+  <target name="compile">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac debug="on" deprecation="off"
+       srcdir="${src}/com/tee/uit/server;${src}/com/tee/uit/servlets"
+       destdir="${build}"
+       classpath="${lib.dir}/castor.jar;${lib.dir}/soap.jar;${lib.dir}/xmlrpc-2.0.jar;${lib.dir}/uit-security.jar;${lib.dir}/uit-definition.jar;${lib.dir}/mail.jar;${lib.dir}/servlet.jar"/>
+  </target>
+
+  <target name="buildjar" depends="compile"> 
+    <jar basedir="${build}" jarfile="${lib.dir}/uit-server.jar" excludes="com/tee/uit/definition/*.*"/>
+  </target>
+
+  <target name="compile_def">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac debug="on" deprecation="off"
+       srcdir="${src}/com/tee/uit/definition"
+       destdir="${build}"
+       classpath="${lib.dir}/castor.jar;"/>
+  </target>
+
+  <target name="build_def_jar" depends="compile_def"> 
+    <jar basedir="${build}" jarfile="${lib.dir}/uit-definition.jar" includes="com/tee/uit/definition/*.class"/>
+  </target>
+
+
+
+</project>
+
