@@ -1,4 +1,4 @@
-/**
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
@@ -26,31 +26,28 @@ package eionet.rpcserver;
 import java.util.Vector;
 
 /**
-* Method in an external service
-*/
-
+ * Method in an external service.
+ */
 public interface UITMethodIF {
 
-  /**
-  * Returns value of the method
-  * @throw ServiceException
-  * @param Vector parameters Vector of objects
-  */
+    /**
+     * Returns value of the method.
+     * @throw ServiceException
+     * @param Vector parameters Vector of objects
+     */
+    public Object getValue( Vector parameters) throws ServiceException;
 
-   public Object getValue( Vector parameters) throws ServiceException;   
 
+    /**
+     * Returns value of the method.
+     * @throw ServiceException
+     * @param Vector parameters Vector of objects
+     */
+    public Object getValue( String parameters) throws ServiceException;
 
-  /**
-  * Returns value of the method
-  * @throw ServiceException
-  * @param Vector parameters Vector of objects
-  */
+    /**
+     * True, if the method does not require authentication.
+     */
+    public boolean isPublic();
 
-   public Object getValue( String parameters) throws ServiceException;   
-
-  /**
-  * True, if the method does not require authentication
-  */
-   public boolean isPublic() ;
- 
 }

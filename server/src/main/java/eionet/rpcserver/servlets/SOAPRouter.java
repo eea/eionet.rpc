@@ -1,4 +1,4 @@
-/**
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
@@ -34,19 +34,17 @@ import org.apache.soap.server.http.RPCRouterServlet;
 
 
 /**
-* Class extending SOAP RPC Router
-* Runs ServiceHandler that reads services / methods from the desciptions file
-*/
-
+ * Class extending SOAP RPC Router.
+ * Runs ServiceHandler that reads services / methods from the desciptions file
+ */
 public class SOAPRouter extends RPCRouterServlet {
 
-  public void init( ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) throws ServletException {
 
-     super.init( config );
-    //Logger.log("********************************** appInit gooo!");
+        super.init(config);
+        //Logger.log("********************************** appInit gooo!");
 
-     SOAPServiceHandler handler = new SOAPServiceHandler();
-     handler.init( config );
-
-  } 
+        SOAPServiceHandler handler = new SOAPServiceHandler();
+        handler.init(config);
+    } 
 }

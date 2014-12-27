@@ -38,112 +38,108 @@ import eionet.definition.Services;
 import eionet.acl.AppUser;
 
 /**
-* Roster, containing all the services in the server
-*/
+ * Roster, containing all the services in the server.
+ */
+public class UITServiceRoster {
 
-public class UITServiceRoster  {
-    
     // JH161205
     public static final String RESOURCE_BUNDLE_NAME = "uit";
     public static final String PROP_XMLRPC_ENCODING = "xmlrpc.encoding";
 
-  private static HashMap _services;
+    private static HashMap _services;
 
-  private static AppUser _user;
-  private static String fileName = "";
-  //static String rpcExecutePrm = "";
+    private static AppUser _user;
+    private static String fileName = "";
+    //static String rpcExecutePrm = "";
 
-  /**
-  * Security Context
-  */
-  public static AppUser getUser() {
-    return _user;
-  }
+    /**
+     * Security Context.
+     */
+    public static AppUser getUser() {
+        return _user;
+    }
 
-  public static void setUser(AppUser user ) {
-    _user=user;
-  }
-  
-  private static void init() throws ServiceException {
-    if (_services == null) {
-      _services=new HashMap();
-      File file = null;
-      try {
+    public static void setUser(AppUser user) {
+        _user=user;
+    }
 
-        ResourceBundle props = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
+    private static void init() throws ServiceException {
+        if (_services == null) {
+            _services = new HashMap();
+            File file = null;
+            try {
 
-        //fileName=props.getString( "services.definition.file" );
+                ResourceBundle props = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
 
-        //acl admin & help admin services included
-        boolean aclAdmin = false;
-        try {
-          fileName=props.getString( "services.definition.file" );
-        } catch( Exception e ) {
-          //e.printStackTrace(System.out);
-          
-        }
+                //fileName=props.getString("services.definition.file");
 
-        try {
-          aclAdmin= new Boolean( props.getString( "acl.admin" )).booleanValue() ;
-        } catch( Exception e ) {
-          //e.printStackTrace(System.out);
-        }
+                //acl admin & help admin services included
+                boolean aclAdmin = false;
+                try {
+                    fileName = props.getString("services.definition.file");
+                } catch(Exception e) {
+                    //e.printStackTrace(System.out);
+                }
 
-        
-        if (!fileName.equals("")) {        
-          file = new File( fileName);
+                try {
+                    aclAdmin= new Boolean(props.getString("acl.admin")).booleanValue();
+                } catch(Exception e) {
+                    //e.printStackTrace(System.out);
+                }
 
-          FileReader reader = new FileReader(file);
-          Services srvs = Services.unmarshal(reader);
-          Service srv[] = srvs.getService();
 
-           for ( int i=0; i< srv.length; i++) {
-            String srvName = srv[i].getName();
-          
-            if (srvName!=null) {
-              _services.put(srv[i].getName(), new ServiceImpl(srv[i]));
+                if (!fileName.equals("")) {
+                    file = new File(fileName);
+
+                    FileReader reader = new FileReader(file);
+                    Services srvs = Services.unmarshal(reader);
+                    Service srv[] = srvs.getService();
+
+                    for (int i = 0; i < srv.length; i++) {
+                        String srvName = srv[i].getName();
+
+                        if (srvName != null) {
+                            _services.put(srv[i].getName(), new ServiceImpl(srv[i]));
+                        }
+                    }
+                }
+
+                // load component services
+                _services.putAll(new ComponentServices(props));
+
+                // this to support the old hardcoded way of loading XService
+                if (aclAdmin)
+                    _services.put("XService", new XServiceImpl());
+
+
+            } catch (FileNotFoundException fe) {
+                fe.printStackTrace(System.out);
+                throw new ServiceException(fe, "File " + file + " not found.");
+            } catch (MarshalException me) {
+                throw new ServiceException(me, "Error reading services from file " + file);
+            } catch (ValidationException ve) {
+                throw new ServiceException(ve, "Validation exception " + ve.toString());
+            } catch (Exception e) {
+                throw new ServiceException(e,"Exception " + e.toString());
             }
-          }
         }
-        
-        // load component services
-        _services.putAll(new ComponentServices(props));
-        
-        // this to support the old hardcoded way of loading XService
-        if (aclAdmin)
-            _services.put("XService", new XServiceImpl());
-            
+    }
 
-      } catch (FileNotFoundException fe ) {
-        fe.printStackTrace(System.out);
-        throw new ServiceException(fe, "File " + file + " not found.");
-      } catch (MarshalException me ) {
-        throw new ServiceException(me, "Error reading services from file " + file);
-      } catch (ValidationException ve ) {
-        throw new ServiceException(ve, "Validation exception " + ve.toString());      
-      } catch (Exception e ) {
-         throw new ServiceException(e,"Exception " + e.toString());      
-      }
-    }      
-  }
+    /**
+     * Returns service by name.
+     */
+    public static UITServiceIF getService(String id) throws ServiceException {
+        init();
+        return (UITServiceIF)_services.get(id);
+    }
 
-  /**
-  * Returns service by name
-  */
-  public static UITServiceIF getService( String id) throws ServiceException {
-    init();
-    return (UITServiceIF)_services.get(id);
-  }
-
-  /**
-  * Returns all services
-  * @return HashMap
-  */
-  
-  public static HashMap getServices( ) throws ServiceException {
-    init();
-    return _services;
-  }
-
+    /**
+     * Returns all services.
+     * @return HashMap
+     */
+    public static HashMap getServices() throws ServiceException {
+      init();
+      return _services;
+    }
 
 }

@@ -1,4 +1,4 @@
-/**
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
@@ -21,37 +21,35 @@
  * Original Code: Kaido Laine (TietoEnator)
  */
 
-
 package eionet.rpcserver;
 
 import java.util.HashMap;
 
- /**
- * Static hashes of mappings between java objects, descriptive types
+/**
+ * Static hashes of mappings between java objects, descriptive types.
  */
+class TypeMappings {
 
- class TypeMappings {
-
-  public static HashMap classTypes;
-  public static HashMap valueTypes;
+    public static HashMap classTypes;
+    public static HashMap valueTypes;
   
-   static { 
-      
-    classTypes = new HashMap();
-    valueTypes = new HashMap();
-      
-    classTypes.put("java.lang.Integer", Integer.TYPE );
-    classTypes.put("java.lang.Boolean", Boolean.TYPE );    
-    classTypes.put("java.lang.Double", Double.TYPE );    
-      
-    valueTypes.put("STRING", "java.lang.String");
-    valueTypes.put("INT", "java.lang.Integer");
-    valueTypes.put("DOUBLE", "java.lang.Double");
-    valueTypes.put("STRUCT", "java.util.Hashtable");
-    valueTypes.put("ARRAY", "java.util.Vector");
-    valueTypes.put("BOOLEAN", "java.lang.Boolean");
-    valueTypes.put("DATE", "java.sql.Date");
-    valueTypes.put("BASE64", "[B"); //KL 030905
-      
-  }
+    static { 
+          
+        classTypes = new HashMap();
+        valueTypes = new HashMap();
+          
+        classTypes.put("java.lang.Integer", Integer.TYPE );
+        classTypes.put("java.lang.Boolean", Boolean.TYPE );    
+        classTypes.put("java.lang.Double", Double.TYPE );    
+          
+        valueTypes.put("STRING", "java.lang.String");
+        valueTypes.put("INT", "java.lang.Integer");
+        valueTypes.put("DOUBLE", "java.lang.Double");
+        valueTypes.put("STRUCT", "java.util.Hashtable");
+        valueTypes.put("ARRAY", "java.util.Vector");
+        valueTypes.put("BOOLEAN", "java.lang.Boolean");
+        valueTypes.put("DATE", "java.sql.Date");
+        valueTypes.put("BASE64", "[B"); //KL 030905
+          
+    }
 }

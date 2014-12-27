@@ -14,6 +14,7 @@ They have the same API as the ones found in SVN except that the package names ha
 | com.tee.uit.client | eionet.rpcclient |
 | com.tee.uit.definition | eionet.definition |
 | com.tee.uit.server | eionet.rpcserver |
+| com.tee.uit.servlets | eionet.rpcserver.servlets |
 
 To use the packages, include this into your pom.xml in Maven.
 ```xml

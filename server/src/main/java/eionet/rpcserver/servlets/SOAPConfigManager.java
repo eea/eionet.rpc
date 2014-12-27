@@ -1,4 +1,4 @@
-/**
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
@@ -23,19 +23,19 @@
 
 package eionet.rpcserver.servlets;
 
-import java.util.* ;
-import java.io.* ;
-import javax.servlet.* ;
-import javax.servlet.http.* ;
-import org.apache.soap.* ;
-import org.apache.soap.rpc.* ;
-import org.apache.soap.server.* ;
-import org.apache.soap.server.http.* ;
-import org.apache.soap.util.* ;
+import java.util.*;
+import java.io.*;
+import javax.servlet.*;
+import javax.servlet.http.*;
+import org.apache.soap.*;
+import org.apache.soap.rpc.*;
+import org.apache.soap.server.*;
+import org.apache.soap.server.http.*;
+import org.apache.soap.util.*;
 
 
 /**
-* Class extending the default config manager
+* Class extending the default config manager.
 * Not used by default
 * If used, not *.ds file is written in the disk, but performance is slower
 *
@@ -52,11 +52,11 @@ public class SOAPConfigManager extends BaseConfigManager   implements ConfigMana
    * read from the config file).
    */
   public void setOptions( Hashtable options ) {
-    if ( options == null ) return ;
+    if ( options == null ) return;
 
     String value = (String) options.get( "filename" );
     if ( value != null && !"".equals(value) )
-      filename = value ;
+      filename = value;
   }
 
   /**
@@ -76,7 +76,7 @@ public class SOAPConfigManager extends BaseConfigManager   implements ConfigMana
     //emtpty implementation
   }
   
-  private static void _log(String s ) {
-    System.out.println("================== " + s);
-  }
-};
+    private static void _log(String s ) {
+        System.out.println("================== " + s);
+    }
+}

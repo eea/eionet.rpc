@@ -1,4 +1,4 @@
-/**
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
@@ -26,24 +26,24 @@ package eionet.rpcserver;
 
 
 /**
-* Service methods
-*/ 
+ * Service methods.
+ */
 public interface UITServiceIF {
 
-  /**
-  * Returns array of all method names
-  */
-  public String[] getMethodNames( ) throws ServiceException ; 
+    /**
+     * Returns array of all method names.
+     */
+    public String[] getMethodNames( ) throws ServiceException;
 
 
-  /**
-  * Returns method by name
-  */
-  public UITMethodIF getMethod( String methodName ) throws ServiceException ; 
+    /**
+     * Returns method by name.
+     */
+    public UITMethodIF getMethod( String methodName ) throws ServiceException;
 
-  /**
-  * Provider class of the service
-  */
-  public String getProvider();
-  
+    /**
+     * Provider class of the service.
+     */
+    public String getProvider();
+
 }

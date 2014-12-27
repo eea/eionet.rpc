@@ -10,29 +10,28 @@ public class HttpUploader {
     
     private static final int BUF_SIZE = 1024;
     
-    public static void upload(HttpServletRequest req, File file) throws IOException{
+    public static void upload(HttpServletRequest req, File file) throws IOException {
         
         RandomAccessFile raFile = new RandomAccessFile(file, "rw");
         String contentType = req.getContentType();
         ServletInputStream in = req.getInputStream();
-        if (contentType.toLowerCase().startsWith("multipart/form-data")){
+        if (contentType.toLowerCase().startsWith("multipart/form-data")) {
             writeFile(raFile, in, extractBoundary(contentType));
-        }
-        else{
+        } else {
             writeFile(raFile, in);
         }
     }
     
-    public static void upload(InputStream in, File file) throws IOException{
+    public static void upload(InputStream in, File file) throws IOException {
         RandomAccessFile raFile = new RandomAccessFile(file, "rw");
         writeFile(raFile, in);
     }
     
-    private static void writeFile(RandomAccessFile raFile, InputStream in) throws IOException{
+    private static void writeFile(RandomAccessFile raFile, InputStream in) throws IOException {
         
         byte[] buf = new byte[BUF_SIZE];
         int i;
-        while ((i=in.read(buf, 0, buf.length)) != -1){
+        while ((i=in.read(buf, 0, buf.length)) != -1) {
             raFile.write(buf, 0, i);
         }
             
@@ -41,7 +40,7 @@ public class HttpUploader {
     }
 
     private static void writeFile(RandomAccessFile raFile, ServletInputStream in, String boundary)
-                                                                            throws IOException{
+                                                                            throws IOException {
         byte[] buf = new byte[BUF_SIZE];
         int i;
         
@@ -54,7 +53,7 @@ public class HttpUploader {
             
             bout.write(b);
             
-            if (!pastContentType){ // if Content-Type not passed, no check of LNF
+            if (!pastContentType) { // if Content-Type not passed, no check of LNF
                 String s = bout.toString();
                 if (s.indexOf("Content-Type") != -1)
                     pastContentType = true;
@@ -62,11 +61,11 @@ public class HttpUploader {
             else{
                 // Content-Type is passed, after next double LNF is file start
                 byte[] bs = bout.toByteArray();
-                if (bs != null && bs.length >= 4){
-                    if (bs[bs.length-1]==10 &&
-                        bs[bs.length-2]==13 &&
-                        bs[bs.length-3]==10 &&
-                        bs[bs.length-4]==13){
+                if (bs != null && bs.length >= 4) {
+                    if (bs[bs.length-1] == 10 &&
+                        bs[bs.length-2] == 13 &&
+                        bs[bs.length-3] == 10 &&
+                        bs[bs.length-4] == 13) {
                         
                         fileStart = true;
                     }
@@ -75,7 +74,7 @@ public class HttpUploader {
         }
         while(!fileStart);
         
-        while ((i=in.readLine(buf, 0, buf.length)) != -1){
+        while ((i=in.readLine(buf, 0, buf.length)) != -1) {
             String line = new String(buf, 0, i);
             if (boundary != null && line.startsWith(boundary))
                 break;
@@ -86,11 +85,11 @@ public class HttpUploader {
         //in.close();
     }
     
-    private static File initFile(String filePath, HttpServletRequest req) throws IOException{
+    private static File initFile(String filePath, HttpServletRequest req) throws IOException {
         return initFile(filePath, req.getRequestedSessionId().replace('-', '_'));
     }
 
-    private static File initFile(String filePath, String fileID) throws IOException{
+    private static File initFile(String filePath, String fileID) throws IOException {
         
         if (filePath == null) filePath = System.getProperty("user.dir");
         if (!filePath.endsWith(File.separator)) filePath = filePath + File.separator;
@@ -104,7 +103,7 @@ public class HttpUploader {
     /**
     * Extract the boundary string in multipart request
     */
-    private static String extractBoundary(String contentType){
+    private static String extractBoundary(String contentType) {
         int i = contentType.indexOf("boundary=");
         if (i == -1) return null;
         String boundary = contentType.substring(i + 9); // 9 for "boundary="
@@ -121,7 +120,7 @@ public class HttpUploader {
             HttpUploader.upload(in, file);
             System.out.println("DONE!");
         }
-        catch (Exception e){
+        catch (Exception e) {
             e.printStackTrace(System.out);
         }
     }

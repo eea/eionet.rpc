@@ -26,29 +26,28 @@ package eionet.rpcserver;
 import java.util.*;
 
 public class ComponentServices extends HashMap {
-    
-    public ComponentServices(ResourceBundle props){
+
+    public ComponentServices(ResourceBundle props) {
         super();
         init(props);
     }
-    
-    private void init(ResourceBundle props){
-        
-        if (props==null) return;
-        
+
+    private void init(ResourceBundle props) {
+
+        if (props == null) return;
+
         String services = props.getString("componentservices");
-        if (services==null) return;
-        
+        if (services == null) return;
+
         StringTokenizer st = new StringTokenizer(services, ",");
         while (st.hasMoreTokens()) {
             String service = st.nextToken().trim();
             String provider = props.getString("componentservices." + service + ".provider");
-            if (provider!=null){
-                try{
+            if (provider != null) {
+                try {
                     CompServiceImpl impl = new CompServiceImpl(provider);
                     put(service, impl);
-                }
-                catch (ServiceException se){}
+                } catch (ServiceException se){}
             }
         }
     }

@@ -22,20 +22,18 @@
  */
 
 
-
-
 package eionet.rpcserver;
 
 /**
-* Exception, thrown when calling services
-*/
+ * Exception, thrown when calling services.
+ */
 public class ServiceException extends Exception {
 
-  public ServiceException(Throwable t, String s) {
-    super(s);
-  }
+    public ServiceException(Throwable t, String s) {
+        super(s);
+    }
 
-  public ServiceException(String s) {
-    super(s);
-  }
+    public ServiceException(String s) {
+        super(s);
+    }
 }

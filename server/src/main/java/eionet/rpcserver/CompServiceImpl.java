@@ -28,7 +28,7 @@ import eionet.definition.Method;
 import eionet.definition.Value;
 
 class CompServiceImpl implements UITServiceIF {
-    
+
     private HashMap _methods;
     private String[] methodNames = null;
     private String[] valueTypes = null;
@@ -50,50 +50,48 @@ class CompServiceImpl implements UITServiceIF {
     public String[] getMethodNames() {
         return methodNames;
     }
-    
+
     private void init() throws ServiceException {
-        
-        if (provider==null)
-            throw new ServiceException("Provider class name missing!"); 
-        
+
+        if (provider == null)
+            throw new ServiceException("Provider class name missing!");
+
         // get the method names and value types from provider
-        
-        try{
+
+        try {
             Class c = Class.forName(provider);
             java.lang.reflect.Method m = c.getMethod("methodNames", null);
             methodNames = (String[])m.invoke(null, null);
             m = c.getMethod("valueTypes", null);
             valueTypes = (String[])m.invoke(null, null);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new ServiceException(e.toString());
         }
-        
+
         // init provider methods
         initMethods();
     }
-    
+
     private void initMethods() {
-        
-        _methods=new HashMap();
-        for (int i=0; i<methodNames.length; i++ ) {
+
+        _methods = new HashMap();
+        for (int i = 0; i < methodNames.length; i++ ) {
             eionet.definition.Method method = new eionet.definition.Method();
             Value value = new Value();
             value.setType(valueTypes[i]);
-            method.setValue(value);   
-            method.setName(methodNames[i]);        
-            method.setAuth(true);        
-            UITMethodIF m = new MethodImpl( this, method );
-            _methods.put(methodNames[i], m);        
+            method.setValue(value);
+            method.setName(methodNames[i]);
+            method.setAuth(true);
+            UITMethodIF m = new MethodImpl(this, method);
+            _methods.put(methodNames[i], m);
         }
     }
-    
+
     public static void main(String[] args){
-        
-        try{
+
+        try {
             CompServiceImpl impl = new CompServiceImpl("eionet.help.RemoteService");
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace(System.out);
         }
     }
