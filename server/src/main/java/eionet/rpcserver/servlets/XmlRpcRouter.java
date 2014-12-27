@@ -123,11 +123,7 @@ public class XmlRpcRouter extends HttpServlet {
             //get encoded username and password    
             String userPassEncoded = auth.substring(6);
          
-            //create a base64 decoder using Sun utility class
-            sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
-            String userPassDecoded = new String(dec.decodeBuffer(userPassEncoded));
-            //Alternative
-            //String userPassDecoded = new String(Base64.decodeBase64(userPassEncoded));
+            String userPassDecoded = new String(Base64.decodeBase64(userPassEncoded));
          
             //split decoded username and password
             StringTokenizer userAndPass = new StringTokenizer(userPassDecoded,":");
