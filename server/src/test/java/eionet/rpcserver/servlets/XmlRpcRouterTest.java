@@ -11,6 +11,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
+import java.nio.charset.Charset;
 
 public class XmlRpcRouterTest {
 
@@ -44,7 +45,7 @@ public class XmlRpcRouterTest {
             + "<methodName>TestService.getInfo</methodName>"
             + "<params/>"
             + "</methodCall>\n";
-        ByteArrayInputStream body = new ByteArrayInputStream(messageBody.getBytes());
+        ByteArrayInputStream body = new ByteArrayInputStream(messageBody.getBytes(Charset.forName("UTF-8")));
         WebRequest request   = new PostMethodWebRequest("http://test.meterware.com/rpcrouter", body, "text/xml");
         WebResponse response = sc.getResponse(request);
         checkRPCContentType(response);
