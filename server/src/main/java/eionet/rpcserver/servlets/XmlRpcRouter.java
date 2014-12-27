@@ -24,6 +24,7 @@
 package eionet.rpcserver.servlets;
   
 import org.apache.xmlrpc.*;
+import org.apache.commons.codec.binary.Base64;
 //import org.apache.xmlrpc.XmlRpcServer;
 
 import javax.servlet.http.HttpServlet;
@@ -54,110 +55,108 @@ import eionet.acl.SignOnException;
  */
 public class XmlRpcRouter extends HttpServlet {
 
-  public XmlRpcServer xmlrpc;
+    public XmlRpcServer xmlrpc;
 
-  /**
-   * gets the service defs from the roster.
-   */
-  public void init(ServletConfig config) throws ServletException {
+    /**
+     * gets the service defs from the roster.
+     */
+    public void init(ServletConfig config) throws ServletException {
 
-    super.init(config);
-    xmlrpc = new XmlRpcServer();
+        super.init(config);
+        xmlrpc = new XmlRpcServer();
 
-     try {
-      HashMap services = UITServiceRoster.getServices();
+        try {
+            HashMap services = UITServiceRoster.getServices();
 
-      Iterator iter = services.keySet().iterator();
-      while (iter.hasNext()) {
-        String srvName = (String)iter.next();
-        
-        xmlrpc.addHandler (srvName, new XmlRpcServiceHandler(srvName));
-        //Logger.log("** srv = " + srvName);
-      }
+            Iterator iter = services.keySet().iterator();
+            while (iter.hasNext()) {
+                String srvName = (String)iter.next();
+              
+                xmlrpc.addHandler(srvName, new XmlRpcServiceHandler(srvName));
+                //Logger.log("** srv = " + srvName);
+            }
   
-     } catch (ServiceException se) {
-        throw new ServletException(se);
-     } catch (Exception e) {
-        throw new ServletException(e);
-   }
+       } catch (ServiceException se) {
+          throw new ServletException(se);
+       } catch (Exception e) {
+          throw new ServletException(e);
+       }
 
-}
-
-
-  /**
-  * Standard doPost implementation.
-  *
-  */
-  public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
-  /*
-    System.out.println("=============================");
-    System.out.println("============POST ============");
-    System.out.println("=============================");
-
-    */
-    byte[] result = null;
-    //authorization here!
-
-    // JH161205 -->
-    String encoding = null;
-    try{
-        ResourceBundle props = ResourceBundle.getBundle(UITServiceRoster.RESOURCE_BUNDLE_NAME);
-        if (props != null) encoding = props.getString(UITServiceRoster.PROP_XMLRPC_ENCODING);
     }
-    catch (Exception e) {
-    }
+
+
+    /**
+     * Standard doPost implementation.
+     *
+     */
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+
+        /*
+        System.out.println("=============================");
+        System.out.println("============POST ============");
+        System.out.println("=============================");
+
+        */
+        byte[] result = null;
+        //authorization here!
+
+        String encoding = null;
+        try {
+            ResourceBundle props = ResourceBundle.getBundle(UITServiceRoster.RESOURCE_BUNDLE_NAME);
+            if (props != null) encoding = props.getString(UITServiceRoster.PROP_XMLRPC_ENCODING);
+        } catch (Exception e) {
+        }
     
-    if (encoding != null) {
-        req.setCharacterEncoding(encoding);
-        XmlRpc.setEncoding(encoding);
-    }
-    // <--- JH161205
+        if (encoding != null) {
+            req.setCharacterEncoding(encoding);
+            XmlRpc.setEncoding(encoding);
+        }
 
-    //get authorization header from request
-    String auth=req.getHeader("Authorization");
-    if (auth != null) {
+        //get authorization header from request
+        String auth=req.getHeader("Authorization");
+        if (auth != null) {
 
-    if (!auth.toUpperCase().startsWith("BASIC")) {
-        throw new ServletException("wrong kind of authorization!");
-    }
- 
-    //get encoded username and password    
-    String userPassEncoded=auth.substring(6);
- 
-    //create a base64 decoder using Sun utility class
-    sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
-    String userPassDecoded = new String(dec.decodeBuffer(userPassEncoded));
- 
-    //split decoded username and password
-    StringTokenizer userAndPass = new StringTokenizer(userPassDecoded,":");
-    String username = userAndPass.nextToken();
-    String password = userAndPass.nextToken();
+            if (!auth.toUpperCase().startsWith("BASIC")) {
+                throw new ServletException("wrong kind of authorization!");
+            }
+         
+            //get encoded username and password    
+            String userPassEncoded = auth.substring(6);
+         
+            //create a base64 decoder using Sun utility class
+            sun.misc.BASE64Decoder dec = new sun.misc.BASE64Decoder();
+            String userPassDecoded = new String(dec.decodeBuffer(userPassEncoded));
+            //Alternative
+            //String userPassDecoded = new String(Base64.decodeBase64(userPassEncoded));
+         
+            //split decoded username and password
+            StringTokenizer userAndPass = new StringTokenizer(userPassDecoded,":");
+            String username = userAndPass.nextToken();
+            String password = userAndPass.nextToken();
+            
+            result = xmlrpc.execute(req.getInputStream(), username, password);
+        } else {
+            //log("================ 2 ");    
+            result = xmlrpc.execute(req.getInputStream());
+        }
     
-    result = xmlrpc.execute(req.getInputStream(), username, password);
-    } else {
-      //log("================ 2 ");    
-      result = xmlrpc.execute(req.getInputStream());
+        res.setContentType("text/xml");
+        res.setContentLength(result.length);
+        OutputStream output = res.getOutputStream();
+        output.write(result);
+        output.flush();
+
+        //req.getSession().invalidate(); //???????????????
     }
-    
-    res.setContentType("text/xml");
-    res.setContentLength(result.length);
-    OutputStream output = res.getOutputStream();
-    output.write(result);
-    output.flush();
 
-    //req.getSession().invalidate(); //???????????????
-  }
-
-  /**
-   * Warning, if someone's trying to use GET.
-   */
-  public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-
-    res.setContentType("text/html");
-    res.getWriter().write("<html><head><title>XML/RPC RPC Router</title></head>");
-    res.getWriter().write("<body><h1>XML/RPC Router</h1>");
-    res.getWriter().write("<p>Sorry, I don't speak via HTTP GET- you have to use HTTP POST to talk to me</p></body></html>");
-   }
+    /**
+     * Warning, if someone's trying to use GET.
+     */
+    public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        res.setContentType("text/html");
+        res.getWriter().write("<html><head><title>XML/RPC RPC Router</title></head>");
+        res.getWriter().write("<body><h1>XML/RPC Router</h1>");
+        res.getWriter().write("<p>Sorry, I don't speak via HTTP GET- you have to use HTTP POST to talk to me</p></body></html>");
+    }
 
 }

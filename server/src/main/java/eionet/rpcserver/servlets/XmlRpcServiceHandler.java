@@ -45,11 +45,12 @@ import java.io.*;
 /**
  * Class handles a service for the XML/Rpc protocol.
  */
-class XmlRpcServiceHandler   implements AuthenticatedXmlRpcHandler  {
+class XmlRpcServiceHandler implements AuthenticatedXmlRpcHandler  {
 
     private String _srvName ;
 
-    protected XmlRpcServiceHandler() {}
+    protected XmlRpcServiceHandler() {
+    }
 
     XmlRpcServiceHandler(String srvName) {
         _srvName = srvName;
@@ -84,7 +85,7 @@ class XmlRpcServiceHandler   implements AuthenticatedXmlRpcHandler  {
                 throw new ServiceException("Method " + methodName + " does not exist in the deployment descriptor");
             }
 
-            if (!mthd.isPublic() && UITServiceRoster.getUser()==null) {
+            if (!mthd.isPublic() && UITServiceRoster.getUser() == null) {
                 //System.out.println("========== bad 2");
                 throw new ServiceException("Not authenticated");
             }
@@ -95,27 +96,27 @@ class XmlRpcServiceHandler   implements AuthenticatedXmlRpcHandler  {
                 value = mthd.getValue(parameters);
                 //System.out.println("========== value ok " + methodName);
 
-            } catch (ServiceException se ) {
+            } catch (ServiceException se) {
                 throw new ServiceException("Error, getting value for the method \n" +
                   se.toString());
             }
 
-            if (value==null)
+            if (value == null)
                 throw new ServiceException("Method returned null");
 
-        } catch (Exception e ) {
-            throw new ServiceException(e,  e.toString());
+        } catch (Exception e) {
+            throw new ServiceException(e, e.toString());
         }
 
         return value;
     }
 
-    public Object execute (String methodName, Vector parameters, String user, String pwd )   throws Exception  {
+    public Object execute (String methodName, Vector parameters, String user, String pwd) throws Exception {
 
         if (user != null) {
             //System.out.println("========== user " + user);
             AppUser usr = new AppUser();
-            usr.authenticate(user,pwd);
+            usr.authenticate(user, pwd);
             UITServiceRoster.setUser(usr);
         } else
             UITServiceRoster.setUser(null);
@@ -125,8 +126,8 @@ class XmlRpcServiceHandler   implements AuthenticatedXmlRpcHandler  {
         // JH150705 - Apache's XML-RPC 2.0 passes methodName like 'serviceName.methodName' while
         // as the older 1.1 passes it like simply 'methodName'. Since TE XML/RPC framework expects
         // the latter case, I'm removing the ''serviceName.' part by force
-        int i = methodName==null ? -1 : methodName.indexOf('.');
-        if (i >= 0 && i<(methodName.length()-1)) methodName = methodName.substring(i+1);
+        int i = methodName == null ? -1 : methodName.indexOf('.');
+        if (i >= 0 && i < (methodName.length() - 1)) methodName = methodName.substring(i+1);
 
         return execute (methodName, parameters);
 

@@ -60,7 +60,7 @@ public class UITServiceRoster {
     }
 
     public static void setUser(AppUser user) {
-        _user=user;
+        _user = user;
     }
 
     private static void init() throws ServiceException {
@@ -82,7 +82,7 @@ public class UITServiceRoster {
                 }
 
                 try {
-                    aclAdmin= new Boolean(props.getString("acl.admin")).booleanValue();
+                    aclAdmin = new Boolean(props.getString("acl.admin")).booleanValue();
                 } catch(Exception e) {
                     //e.printStackTrace(System.out);
                 }
@@ -135,7 +135,8 @@ public class UITServiceRoster {
 
     /**
      * Returns all services.
-     * @return HashMap
+     *
+     * @return HashMap of services
      */
     public static HashMap getServices() throws ServiceException {
       init();
