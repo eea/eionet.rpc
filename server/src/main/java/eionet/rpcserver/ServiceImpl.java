@@ -36,7 +36,7 @@ import java.util.Iterator;
 class ServiceImpl implements UITServiceIF  {
 
     private String _providerName;
-    private HashMap _methods;
+    private HashMap<String, UITMethodIF> _methods;
 
     ServiceImpl(Service srv) {
         this._providerName = srv.getProvider();
@@ -47,11 +47,10 @@ class ServiceImpl implements UITServiceIF  {
 
         String[] names = new String[_methods.size()];
         int x = 0;
-        for (Iterator i = _methods.keySet().iterator(); i.hasNext();) {
-            names[x] = (String)i.next();
+        for (String s : _methods.keySet()) {
+            names[x] = s;
             x++;
         }
-
         return names;
     }
 
@@ -77,8 +76,8 @@ class ServiceImpl implements UITServiceIF  {
      */
     private void readMethods(Service srv) {
 
-        if (_methods== null) {
-            _methods = new HashMap();
+        if (_methods == null) {
+            _methods = new HashMap<String, UITMethodIF>();
             Method[] methods = srv.getMethods().getMethod();
 
             for (int i = 0; i < methods.length; i++) {

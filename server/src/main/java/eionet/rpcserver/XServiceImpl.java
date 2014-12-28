@@ -32,10 +32,10 @@ class XServiceImpl implements UITServiceIF {
     private HashMap _methods;
 
 //  private final String getMethodName="getAclsData";
-//  private final String setMethodName="setAclsData";  
+//  private final String setMethodName="setAclsData";
 
     private final String[] methodNames = RemoteService.methodNames();
-  
+
 
     /*{"getAclEntries", "getLocalGroups", "getChildrenAcls",
       "getUserPermissions",    "getPermissionDescrs", "setAclEntries", "setLocalGroups"};*/
@@ -43,10 +43,10 @@ class XServiceImpl implements UITServiceIF {
     private final String[] valueTypes = RemoteService.valueTypes();
 
 
-    /*{"ARRAY", "STRUCT", "ARRAY", 
+    /*{"ARRAY", "STRUCT", "ARRAY",
         "ARRAY", "STRUCT", "STRING", "STRING"};*/
-  
-    public XServiceImpl()  { 
+
+    public XServiceImpl()  {
         initMethods();
     }
 
@@ -55,7 +55,7 @@ class XServiceImpl implements UITServiceIF {
     }
 
     public UITMethodIF getMethod(String name) {
-        return (UITMethodIF)_methods.get(name);
+        return (UITMethodIF) _methods.get(name);
     }
 
     public String[] getMethodNames() {
@@ -64,20 +64,20 @@ class XServiceImpl implements UITServiceIF {
         return methodNames;
     }
 
-    private void     initMethods() {
-        //System.out.println("=============== init X Service"); 
+    private void initMethods() {
+        //System.out.println("=============== init X Service");
         _methods = new HashMap();
-        for (int i = 0; i < methodNames.length; i++ ) {
+        for (int i = 0; i < methodNames.length; i++) {
             Method method = new Method();
             Value value = new Value();
             value.setType(valueTypes[i]);
-            method.setValue(value);   
-            method.setName(methodNames[i]);        
-            method.setAuth(true);        
-            UITMethodIF m = new MethodImpl( this, method );
-            _methods.put(methodNames[i], m);        
+            method.setValue(value);
+            method.setName(methodNames[i]);
+            method.setAuth(true);
+            UITMethodIF m = new MethodImpl(this, method);
+            _methods.put(methodNames[i], m);
         }
 
     }
-    
+
 }

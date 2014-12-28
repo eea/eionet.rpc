@@ -84,7 +84,7 @@ class MethodImpl implements UITMethodIF {
             //System.out.println("================================== desc " + descType);
             //System.out.println("================================== value " + valueType);
 
-            if (!valueType.equals((String)_valueTypes.get(descType)))
+            if (!valueType.equals((String) _valueTypes.get(descType)))
               throw new ServiceException(" The value type is not the same as described in the "
                   + "deployment descriptor, \n"
                   + " returned " + valueType + ", must be " + descType);
@@ -94,7 +94,7 @@ class MethodImpl implements UITMethodIF {
             if (descType.equals("STRUCT") && _valueDescr.getStruct() != null) {
 
                 //value is Hashtable by mappings
-                Hashtable h = (Hashtable)value;
+                Hashtable h = (Hashtable) value;
 
                 //elements by the description
                 Element[] elems = _valueDescr.getStruct().getElement();
@@ -116,8 +116,8 @@ class MethodImpl implements UITMethodIF {
                         throw new ServiceException("No such Member in the returned structure " + dMemberName);
                     else {
                         //check, if the member is of the correct type
-                        String  vMemberType = (String)h.get(dMemberName).getClass().getName();
-                        if (!vMemberType.equals((String)_valueTypes.get(dMemberType)))
+                        String  vMemberType = (String) h.get(dMemberName).getClass().getName();
+                        if (!vMemberType.equals((String) _valueTypes.get(dMemberType)))
                           throw new ServiceException("Wrong type of Member " + dMemberName + "\n"
                               + " returned " + vMemberType + " must be " + dMemberType);
                     }
@@ -137,7 +137,7 @@ class MethodImpl implements UITMethodIF {
                 if (arrayElemsType != null) {
                   for (int i = 0; i < v.size(); i++) {
                   if (!v.elementAt(i).getClass().getName().equals(_valueTypes.get(arrayElemsType)))
-                      throw new ServiceException("Wrong type in result array, position " + (i +1)
+                      throw new ServiceException("Wrong type in result array, position " + (i + 1)
                           + " needed " + arrayElemsType);
                   }
                }
@@ -195,7 +195,7 @@ class MethodImpl implements UITMethodIF {
 
         for (int i = 0; i < prmCount; i++) {
             Object prm = prms.elementAt(i);
-            paramTypes[i]=getClass(prm);
+            paramTypes[i] = getClass(prm);
         }
         return paramTypes;
 
@@ -244,56 +244,54 @@ class MethodImpl implements UITMethodIF {
         Object value = null;
         try {
 
-          //provider class
-          Class providerClass = Class.forName(_providerName);
+            //provider class
+            Class providerClass = Class.forName(_providerName);
 
-          Class[] paramTypes = getParamTypes(parameters);
-
-
-          //method in java class
-          java.lang.reflect.Method method = providerClass.getMethod(_name, paramTypes);
-          Object[] args = parameters.toArray();
-          Object o = null;
-
-          try {
-
-              //if not public, we add a AppUser object in constructor
-              if (!isPublic()) {
-                  //System.out.println(" ====================== getValue3");
-                  Class[] c = new Class[1];
-                  AppUser user = UITServiceRoster.getUser();
-
-                  //System.out.println(" ====================== user = " + user.getUserName());
+            Class[] paramTypes = getParamTypes(parameters);
 
 
-                  if (user == null)
-                      throw new ServiceException("User is not authenticated.");
+            //method in java class
+            java.lang.reflect.Method method = providerClass.getMethod(_name, paramTypes);
+            Object[] args = parameters.toArray();
+            Object o = null;
 
-                  Object[] p = new Object[1];
-                  p[0]=user;
-                  c[0] = user.getClass();
-                  java.lang.reflect.Constructor constr = providerClass.getConstructor(c);
-                  o = constr.newInstance(p);
-                  //System.out.println(" ====================== getValue4");
-              } else
-                  o = providerClass.newInstance();
+            try {
+
+                //if not public, we add a AppUser object in constructor
+                if (!isPublic()) {
+                    //System.out.println(" ====================== getValue3");
+                    Class[] c = new Class[1];
+                    AppUser user = UITServiceRoster.getUser();
+
+                    //System.out.println(" ====================== user = " + user.getUserName());
 
 
-          } catch (InstantiationException ie) {
-              System.out.println("Constructor error in the adapter class" + ie.toString());
-          } catch (Exception e) {
-              throw new ServiceException(e.toString());
-          }
+                    if (user == null)
+                        throw new ServiceException("User is not authenticated.");
+
+                    Object[] p = new Object[1];
+                    p[0] = user;
+                    c[0] = user.getClass();
+                    java.lang.reflect.Constructor constr = providerClass.getConstructor(c);
+                    o = constr.newInstance(p);
+                } else
+                    o = providerClass.newInstance();
+
+
+            } catch (InstantiationException ie) {
+                System.out.println("Constructor error in the adapter class" + ie.toString());
+            } catch (Exception e) {
+                throw new ServiceException(e.toString());
+            }
 
             value = method.invoke(o, args);
-
 
             try {
                 validateValue(value);
             } catch (ServiceException se) {
                 //Logger.log(se.toString());
                 throw new ServiceException(se, " Value, returned by the API method, does not fit "
-                  + " with the description. \n See log for details" + "\n" + se.toString());
+                    + " with the description. \n See log for details" + "\n" + se.toString());
             }
 
         } catch (ClassNotFoundException cnf) {

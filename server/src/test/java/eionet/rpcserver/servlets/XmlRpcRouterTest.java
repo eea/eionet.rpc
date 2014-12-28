@@ -7,6 +7,7 @@ import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
+import org.apache.commons.lang.StringEscapeUtils;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,13 +23,33 @@ public class XmlRpcRouterTest {
         assertEquals("content type", "text/xml", response.getContentType());
     }
 
-    private InputStream buildMethodCall(String methodName) throws Exception {
-        String messageBody = "<?xml version='1.0'?>\n"
+    private InputStream buildMethodCall(String methodName, Object... params) throws Exception {
+        StringBuilder messageBody = new StringBuilder("<?xml version='1.0'?>\n"
             + "<methodCall>"
-            + "<methodName>TestService." + methodName +"</methodName>"
-            + "<params/>"
-            + "</methodCall>\n";
-        ByteArrayInputStream body = new ByteArrayInputStream(messageBody.getBytes("UTF-8"));
+            + "<methodName>TestService." + methodName +"</methodName>");
+        if (params == null) {
+            messageBody.append("<params/>");
+        } else {
+            messageBody.append("<params>");
+            for (Object param : params) {
+                messageBody.append("<param>");
+                if (param instanceof String) {
+                    messageBody.append("<string>").append(StringEscapeUtils.escapeXml(param.toString())).append("</string>");
+                } else if (param instanceof Double) {
+                    messageBody.append("<double>").append(param).append("</double>");
+                } else if (param instanceof Integer) {
+                    messageBody.append("<i4>").append(param).append("</i4>");
+                } else if (param instanceof Boolean) {
+                    messageBody.append("<boolean>").append(param).append("</boolean>");
+                } else {
+                    messageBody.append(StringEscapeUtils.escapeXml(param.toString()));
+                }
+                messageBody.append("</param>");
+            }
+            messageBody.append("</params>");
+        }
+        messageBody.append("</methodCall>\n");
+        ByteArrayInputStream body = new ByteArrayInputStream(messageBody.toString().getBytes("UTF-8"));
         return body;
     }
 

@@ -23,9 +23,6 @@
 
 package eionet.rpcserver.servlets;
 
-import org.exolab.castor.xml.MarshalException;
-import org.exolab.castor.xml.ValidationException;
-
 import org.apache.xmlrpc.XmlRpcHandler;
 import org.apache.xmlrpc.AuthenticatedXmlRpcHandler;
 
@@ -61,7 +58,7 @@ class XmlRpcServiceHandler implements AuthenticatedXmlRpcHandler  {
      * @param parameters Handler input parameters.
      * @return The value
      */
-    public Object execute(String methodName, Vector parameters)  throws Exception    {
+    public Object execute(String methodName, Vector parameters) throws Exception {
 
         //value of method
         Object value = null;
@@ -97,8 +94,7 @@ class XmlRpcServiceHandler implements AuthenticatedXmlRpcHandler  {
                 //System.out.println("========== value ok " + methodName);
 
             } catch (ServiceException se) {
-                throw new ServiceException("Error, getting value for the method \n" +
-                  se.toString());
+                throw new ServiceException("Error, getting value for the method \n" + se.toString());
             }
 
             if (value == null)
@@ -111,23 +107,20 @@ class XmlRpcServiceHandler implements AuthenticatedXmlRpcHandler  {
         return value;
     }
 
-    public Object execute (String methodName, Vector parameters, String user, String pwd) throws Exception {
+    public Object execute(String methodName, Vector parameters, String user, String pwd) throws Exception {
 
         if (user != null) {
-            //System.out.println("========== user " + user);
             AppUser usr = new AppUser();
             usr.authenticate(user, pwd);
             UITServiceRoster.setUser(usr);
         } else
             UITServiceRoster.setUser(null);
 
-        //System.out.println("========== execute !!!!!!!!!!!!!!!!!!! " + methodName);
-
-        // JH150705 - Apache's XML-RPC 2.0 passes methodName like 'serviceName.methodName' while
+        // Apache's XML-RPC 2.0 passes methodName like 'serviceName.methodName' while
         // as the older 1.1 passes it like simply 'methodName'. Since TE XML/RPC framework expects
         // the latter case, I'm removing the ''serviceName.' part by force
         int i = methodName == null ? -1 : methodName.indexOf('.');
-        if (i >= 0 && i < (methodName.length() - 1)) methodName = methodName.substring(i+1);
+        if (i >= 0 && i < (methodName.length() - 1)) methodName = methodName.substring(i + 1);
 
         return execute (methodName, parameters);
 

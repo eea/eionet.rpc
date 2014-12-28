@@ -46,5 +46,5 @@ public class SOAPRouter extends RPCRouterServlet {
 
         SOAPServiceHandler handler = new SOAPServiceHandler();
         handler.init(config);
-    } 
+    }
 }

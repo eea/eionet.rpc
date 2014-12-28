@@ -57,7 +57,7 @@ class XmlRpcServiceClient implements ServiceClientIF  {
         this.srvName = srvName;
         this.rpcUrl = srvUrl;
         
-        if (srvName==null) srvName = "";
+        if (srvName == null) srvName = "";
 
         this.rpcClient = initRpcClient();
     }
@@ -95,13 +95,13 @@ class XmlRpcServiceClient implements ServiceClientIF  {
 
         try {
             
-            if (encoding!=null) XmlRpc.setEncoding("UTF-8");
+            if (encoding != null) XmlRpc.setEncoding("UTF-8");
             
-            value = rpcClient.execute (methSrvName, params) ;
+            value = rpcClient.execute(methSrvName, params) ;
             
             // JH181205 - for some reason, when an exception is encountered, Apache's XML-RPC 2.0
             // returns that exception as the return value of XmlRpcClient.execute(String, Vector)
-            // while it should simply through it. This might cause ClassCastException at the receiving
+            // while it should simply throw it. This might cause ClassCastException at the receiving
             // end of this getValue(String, Vector) method.
             // It was not like that with Apache's XML-RPC 1.1. Could also be my bug somewhere. But
             // since I don't have time right now to investigate, I'm quick-fixing this as follows.

@@ -68,7 +68,7 @@ public class SOAPClassProvider implements Provider  {
 
     protected Object               targetObject;
 
-    public void locate(DeploymentDescriptor dd,Envelope env,   Call call, String methodName,
+    public void locate(DeploymentDescriptor dd, Envelope env, Call call, String methodName,
                           String targetObjectURI,
                           SOAPContext reqContext) throws SOAPException {
 
@@ -85,7 +85,7 @@ public class SOAPClassProvider implements Provider  {
             isPublic = UITServiceRoster.getService(srvName).getMethod(methodName).isPublic();
         } catch (ServiceException se) {
             isPublic = false;
-            //throw new SOAPException(Constants.FAULT_CODE_PROTOCOL,se.toString());
+            //throw new SOAPException(Constants.FAULT_CODE_PROTOCOL, se.toString());
         }
 
         AppUser user = null;
@@ -146,7 +146,7 @@ public class SOAPClassProvider implements Provider  {
                               "Method '" + call.getMethodName() + "' is not supported.");
         }
              // get at the target object
-       targetObject = getTargetObject(serviceManager, dd, targetObjectURI, servlet, session,  reqContext,context, user);
+       targetObject = getTargetObject(serviceManager, dd, targetObjectURI, servlet, session,  reqContext, context, user);
 
     };
 
@@ -158,7 +158,7 @@ public class SOAPClassProvider implements Provider  {
             StringWriter  sw = new StringWriter();
             env.marshall(sw, call.getSOAPMappingRegistry(), resContext);
             resContext.setRootPart(sw.toString(), Constants.HEADERVAL_CONTENT_TYPE_UTF8);
-        } catch(Exception e) {
+        } catch (Exception e) {
             if (e instanceof SOAPException)
                 throw (SOAPException) e;
             throw new SOAPException(Constants.FAULT_CODE_SERVER, e.toString());
@@ -211,8 +211,8 @@ public class SOAPClassProvider implements Provider  {
             scopeLock = context;
         } else {
             throw new SOAPException(Constants.FAULT_CODE_SERVER,
-                                   "Service uses deprecated object scope " +
-                                   "'page': inform provider of error");
+                                   "Service uses deprecated object scope "
+                                   + "'page': inform provider of error");
         }
 
         // create the object if necessary
@@ -247,7 +247,7 @@ public class SOAPClassProvider implements Provider  {
                             else {
                                Class[] cl = new Class[1];
                                Object[] p = new Object[1];
-                               p[0]=user;
+                               p[0] = user;
                                cl[0] = user.getClass();
                                java.lang.reflect.Constructor constr = c.getConstructor(cl);
                                targetObject = constr.newInstance(p);
@@ -291,8 +291,8 @@ public class SOAPClassProvider implements Provider  {
             try {
                 bc = ctxt.loadClass(SCRIPT_INVOKER);
             } catch (Exception e) {
-                String msg = "Unable to load BSF invoker (" + SCRIPT_INVOKER + ")" +
-                  ": script services not available without BSF: " + e.getMessage();
+                String msg = "Unable to load BSF invoker (" + SCRIPT_INVOKER + ")"
+                    + ": script services not available without BSF: " + e.getMessage();
                 throw new SOAPException(Constants.FAULT_CODE_SERVER, msg, e);
             }
 
@@ -303,8 +303,8 @@ public class SOAPClassProvider implements Provider  {
                 try {
                     script = IOUtils.getStringFromReader(new FileReader(fileName));
                 } catch (Exception e) {
-                    String msg = "Unable to load script file (" + fileName + ")" +
-                      ": " + e.getMessage();
+                    String msg = "Unable to load script file (" + fileName + ")"
+                        + ": " + e.getMessage();
                     throw new SOAPException(Constants.FAULT_CODE_SERVER, msg, e);
                 }
             }
@@ -319,7 +319,7 @@ public class SOAPClassProvider implements Provider  {
             } catch (InvocationTargetException ite) {
                 Throwable te = ite.getTargetException();
                 if (te instanceof SOAPException)
-                  throw (SOAPException)te;
+                  throw (SOAPException) te;
                 String msg = "Unable to invoke init method of script invoker: " + te;
                 throw new SOAPException(Constants.FAULT_CODE_SERVER, msg, te);
             } catch (Exception e) {
@@ -330,6 +330,5 @@ public class SOAPClassProvider implements Provider  {
 
         return targetObject;
     }
-
 
 }

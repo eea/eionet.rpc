@@ -120,7 +120,7 @@ public class UITServiceRoster {
             } catch (ValidationException ve) {
                 throw new ServiceException(ve, "Validation exception " + ve.toString());
             } catch (Exception e) {
-                throw new ServiceException(e,"Exception " + e.toString());
+                throw new ServiceException(e, "Exception " + e.toString());
             }
         }
     }

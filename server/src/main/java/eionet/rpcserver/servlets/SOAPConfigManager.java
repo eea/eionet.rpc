@@ -41,42 +41,41 @@ import org.apache.soap.util.*;
 *
 * must be specified in the soap.xml file
 */
-public class SOAPConfigManager extends BaseConfigManager   implements ConfigManager {
+public class SOAPConfigManager extends BaseConfigManager implements ConfigManager {
 
-  /** The name of the deployment file. */
-  protected String filename = "eionet.ds";
+    /** The name of the deployment file. */
+    protected String filename = "eionet.ds";
 
 
-  /**
-   * This method sets the configuration options (usually
-   * read from the config file).
-   */
-  public void setOptions( Hashtable options ) {
-    if ( options == null ) return;
+    /**
+     * This method sets the configuration options (usually
+     * read from the config file).
+     */
+    public void setOptions(Hashtable options) {
+        if (options == null) return;
 
-    String value = (String) options.get( "filename" );
-    if ( value != null && !"".equals(value) )
-      filename = value;
-  }
+        String value = (String) options.get("filename");
+        if (value != null && !"".equals(value))
+            filename = value;
+    }
 
-  /**
-   * Loads the descriptors from the underlying registry file, which
-   * contains a serialized Hashtable.
-   */
+    /**
+     * Loads the descriptors from the underlying registry file, which
+     * contains a serialized Hashtable.
+     */
+    public void loadRegistry() throws SOAPException {
+      //empty implementation
+    }
 
-  public void loadRegistry() throws SOAPException {
-    //empty implementation
-  }
+    /**
+     * Saves currently deployed descriptors to the underlying registry file,
+     * as a serialized Hashtable.
+     */
+    public void saveRegistry() throws SOAPException {
+      //emtpty implementation
+    }
 
-  /**
-   * Saves currently deployed descriptors to the underlying registry file,
-   * as a serialized Hashtable.
-   */
-  public void saveRegistry() throws SOAPException {
-    //emtpty implementation
-  }
-  
-    private static void _log(String s ) {
+    private static void _log(String s) {
         System.out.println("================== " + s);
     }
 }
