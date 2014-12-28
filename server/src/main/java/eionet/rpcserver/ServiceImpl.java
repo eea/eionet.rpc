@@ -25,70 +25,66 @@
 package eionet.rpcserver;
 
 import eionet.definition.Method;
-import eionet.definition.Service; 
+import eionet.definition.Service;
 
 import java.util.HashMap;
 import java.util.Iterator;
 
 /**
-* Class implements SericeIF
-*/
-
+ * Class implements SericeIF.
+ */
 class ServiceImpl implements UITServiceIF  {
-  private String _providerName;
-  private HashMap _methods;
-  
-  ServiceImpl( Service srv ) {
-    this._providerName = srv.getProvider();
-    readMethods( srv );
-  }
 
-  public String[] getMethodNames() {
+    private String _providerName;
+    private HashMap _methods;
 
-    String[] names = new String [ _methods.size()];
-    int x = 0;
-    for (Iterator i = _methods.keySet().iterator(); i.hasNext();) {
-      names[x] = (String)i.next();
-      x++;
+    ServiceImpl(Service srv) {
+        this._providerName = srv.getProvider();
+        readMethods(srv);
     }
 
-    return names;
-  }
-  
-  /**
-  * Returns nethod by name
-  */
-  public UITMethodIF getMethod (String methodName ) throws ServiceException {
-    UITMethodIF method = null;
-    try {
-      method =  (UITMethodIF)_methods.get(methodName);
+    public String[] getMethodNames() {
 
-    } catch (NullPointerException n) {
-      throw new ServiceException("No method " + methodName);
+        String[] names = new String[_methods.size()];
+        int x = 0;
+        for (Iterator i = _methods.keySet().iterator(); i.hasNext();) {
+            names[x] = (String)i.next();
+            x++;
+        }
 
+        return names;
     }
-    return method;
-  }
 
-  public String getProvider() {
-    return _providerName;
-  }
-
-  /**
-  * Methods to HashMap
-  */
-  private void readMethods(Service srv) {
-
-
-
-    if (_methods== null) {
-      _methods = new HashMap();
-      Method[] methods = srv.getMethods().getMethod();
-
-      for (int i=0; i<methods.length;i++){
-        _methods.put( methods[i].getName(), new MethodImpl( this, methods[i])  );
-         //Logger.log(" ** method " + methods[i].getName() ); }
-      }   
+    /**
+     * Returns nethod by name
+     */
+    public UITMethodIF getMethod (String methodName) throws ServiceException {
+        UITMethodIF method = null;
+        try {
+            method =  (UITMethodIF)_methods.get(methodName);
+        } catch (NullPointerException n) {
+            throw new ServiceException("No method " + methodName);
+        }
+        return method;
     }
-  }
+
+    public String getProvider() {
+        return _providerName;
+    }
+
+    /**
+     * Methods to HashMap.
+     */
+    private void readMethods(Service srv) {
+
+        if (_methods== null) {
+            _methods = new HashMap();
+            Method[] methods = srv.getMethods().getMethod();
+
+            for (int i = 0; i < methods.length; i++) {
+                _methods.put(methods[i].getName(), new MethodImpl(this, methods[i]));
+                 //Logger.log(" ** method " + methods[i].getName());
+            }
+        }
+    }
 }
