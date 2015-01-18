@@ -34,21 +34,21 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.ServletException;
 import javax.servlet.ServletConfig;
 
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.ResourceBundle;
-import java.util.StringTokenizer;
-
+import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.File;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Properties;
+import java.util.StringTokenizer;
 
 
 import eionet.rpcserver.UITServiceRoster;
 import eionet.rpcserver.ServiceException;
 
 import eionet.acl.AppUser;
-import eionet.acl.SignOnException;
 
 /**
  * Class router services for XML/RPC protocol.
@@ -102,8 +102,9 @@ public class XmlRpcRouter extends HttpServlet {
 
         String encoding = null;
         try {
-            ResourceBundle props = ResourceBundle.getBundle(UITServiceRoster.RESOURCE_BUNDLE_NAME);
-            if (props != null) encoding = props.getString(UITServiceRoster.PROP_XMLRPC_ENCODING);
+            Hashtable<Object, Object> props = UITServiceRoster.loadProperties();
+
+            encoding = (String) props.get(UITServiceRoster.PROP_XMLRPC_ENCODING);
         } catch (Exception e) {
         }
 

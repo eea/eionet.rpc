@@ -23,31 +23,40 @@
 
 package eionet.rpcserver;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.StringTokenizer;
 
 public class ComponentServices extends HashMap {
 
-    public ComponentServices(ResourceBundle props) {
+    public ComponentServices(Hashtable<Object, Object> props) {
         super();
         init(props);
     }
 
-    private void init(ResourceBundle props) {
+    /**
+     * Load configuration from properties map.
+     *
+     * @param props - key,value map
+     */
+    private void init(Hashtable<Object, Object> props) {
 
         if (props == null) return;
 
-        String services = props.getString("componentservices");
+        String services = (String) props.get("componentservices");
         if (services == null) return;
 
         StringTokenizer st = new StringTokenizer(services, ",");
         while (st.hasMoreTokens()) {
             String service = st.nextToken().trim();
-            String provider = props.getString("componentservices." + service + ".provider");
+            String provider = (String) props.get("componentservices." + service + ".provider");
             if (provider != null) {
                 try {
                     CompServiceImpl impl = new CompServiceImpl(provider);
                     put(service, impl);
-                } catch (ServiceException se){}
+                } catch (ServiceException se){
+                   // Ignore problems - should at least unconfigure and log.
+                }
             }
         }
     }

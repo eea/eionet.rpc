@@ -6,7 +6,7 @@
 
     <groupId>eionet</groupId>
     <artifactId>rpcserver</artifactId>
-    <version>2.0</version>
+    <version>3.0</version>
     <packaging>jar</packaging>
     <name>RPC server</name>
 
@@ -37,7 +37,7 @@
         <dependency>
            <groupId>eionet</groupId>
            <artifactId>acl</artifactId>
-           <version>2.0</version>
+           <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>

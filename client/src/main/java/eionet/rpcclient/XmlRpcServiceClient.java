@@ -28,26 +28,26 @@ import org.apache.xmlrpc.XmlRpcClient;
 import org.apache.xmlrpc.XmlRpcClientLite;
 import org.apache.xmlrpc.XmlRpcException;
 
-import java.util.ResourceBundle;
-import java.util.Vector;
-import java.util.Hashtable;
-
-import java.net.MalformedURLException;
-
 import java.io.ByteArrayOutputStream;
+import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.IOException;
 import java.io.PrintStream;
-
+import java.net.MalformedURLException;
+import java.util.Hashtable;
+import java.util.Properties;
+import java.util.Vector;
+import javax.naming.Context;
+import javax.naming.InitialContext;
 
 /**
  * Service Client implementation for the XML/RPC protocol.
  */
 class XmlRpcServiceClient implements ServiceClientIF  {
 
-    private static final String RESOURCE_BUNDLE_NAME = "uit";
+    private static final String RESOURCE_BUNDLE_NAME = "rpc";
     private static final String PROP_XMLRPC_ENCODING = "xmlrpc.encoding";
 
-    //private static String rpcUrl; // = "http://localhost:8080/uit/rpcrouter/";
     private String srvName;
     private String rpcUrl;
     private XmlRpcClient rpcClient;
@@ -88,14 +88,32 @@ class XmlRpcServiceClient implements ServiceClientIF  {
 	
 	String encoding = null;
 	try {
-            ResourceBundle props = ResourceBundle.getBundle(RESOURCE_BUNDLE_NAME);
-            if (props != null) encoding = props.getString(PROP_XMLRPC_ENCODING);
-	} catch (Exception e) {
-	}
+            // Look up in JNDI
+            Context initContext = new InitialContext();
+            if (initContext != null) {
+                encoding = (String) initContext.lookup("java:comp/env/" + RESOURCE_BUNDLE_NAME + "/" + PROP_XMLRPC_ENCODING);
+            }
+        } catch (Exception e) {
+            encoding = null;
+        }
+        if (encoding == null) {
+            try {
+                Properties props = new Properties();
+                InputStream inStream = XmlRpcServiceClient.class.getResourceAsStream("/" + RESOURCE_BUNDLE_NAME + ".properties");
+                props.load(inStream);
+                inStream.close();
+                if (props != null) {
+                    encoding = props.getProperty(PROP_XMLRPC_ENCODING);
+                }
+            } catch (Exception e) {
+                encoding = null;
+            }
+        }
 
         try {
-            
-            if (encoding != null) XmlRpc.setEncoding("UTF-8");
+            if (encoding != null) {
+                XmlRpc.setEncoding("UTF-8");
+            }
             
             value = rpcClient.execute(methSrvName, params) ;
             
@@ -129,7 +147,7 @@ class XmlRpcServiceClient implements ServiceClientIF  {
   
     }
 
-    public void setCredentials (String userName, String pwd) throws ServiceClientException {
+    public void setCredentials(String userName, String pwd) throws ServiceClientException {
         rpcClient.setBasicAuthentication(userName, pwd);
     }
 

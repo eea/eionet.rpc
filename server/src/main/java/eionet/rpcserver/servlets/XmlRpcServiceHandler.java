@@ -23,7 +23,6 @@
 
 package eionet.rpcserver.servlets;
 
-import org.apache.xmlrpc.XmlRpcHandler;
 import org.apache.xmlrpc.AuthenticatedXmlRpcHandler;
 
 import eionet.rpcserver.ServiceException;
@@ -32,12 +31,7 @@ import eionet.rpcserver.UITServiceIF;
 import eionet.rpcserver.UITMethodIF;
 
 import java.util.Vector;
-import eionet.acl.AccessController;
-import eionet.acl.SignOnException;
-//import eionet.rpcserver.UITUser;
 import eionet.acl.AppUser;
-
-import java.io.*;
 
 /**
  * Class handles a service for the XML/Rpc protocol.
@@ -122,7 +116,7 @@ class XmlRpcServiceHandler implements AuthenticatedXmlRpcHandler  {
         int i = methodName == null ? -1 : methodName.indexOf('.');
         if (i >= 0 && i < (methodName.length() - 1)) methodName = methodName.substring(i + 1);
 
-        return execute (methodName, parameters);
+        return execute(methodName, parameters);
 
     }
 
