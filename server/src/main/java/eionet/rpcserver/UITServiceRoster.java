@@ -90,7 +90,14 @@ public class UITServiceRoster {
                 }
 
                 try {
-                    aclAdmin = Boolean.valueOf((String)props.get("acl.admin")).booleanValue();
+                    Object aclAdminCandidate = props.get("acl.admin");
+                    if (aclAdminCandidate == null) {
+                        aclAdmin = false;
+                    } else if (aclAdminCandidate instanceof Boolean) {
+                        aclAdmin = ((Boolean)aclAdminCandidate).booleanValue();
+                    } else {
+                        aclAdmin = Boolean.valueOf(aclAdminCandidate.toString()).booleanValue();
+                    }
                 } catch(Exception e) {
                 }
 
