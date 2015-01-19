@@ -15,9 +15,9 @@
         <checkstyle.config.location>${main.basedir}/docs/checkstyle.xml</checkstyle.config.location>
     </properties>
 
-    <version>2.0</version>
+    <version>3.0</version>
     <name>Eionet RPC Main POM</name>
-    <url>http://maven.apache.org</url>
+    <url>https://github.com/eea/eionet.rpc</url>
 
     <modules>
         <module>definition</module>
