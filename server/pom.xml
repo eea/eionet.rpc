@@ -89,6 +89,12 @@
             <version>2.4</version>
             <scope>test</scope>
         </dependency>
+        <dependency> <!-- JNDI support -->
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>7.0.57</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

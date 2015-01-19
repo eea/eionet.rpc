@@ -52,7 +52,7 @@ public class UITServiceRoster {
 
     public static final String RESOURCE_BUNDLE_NAME = "rpc";
     public static final String PROP_XMLRPC_ENCODING = "xmlrpc.encoding";
-    public static final String TOMCAT_CONTEXT = "java:/comp/env/";
+    public static final String TOMCAT_CONTEXT = "java:comp/env/";
 
     private static HashMap _services;
 
