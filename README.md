@@ -1,5 +1,5 @@
-RPC version 3.0
-===============
+RPC version 3.1-SNAPSHOT
+========================
 
 This library is a re-merge of the following SVN packages:
 
@@ -21,19 +21,19 @@ To use the packages, include this into your pom.xml in Maven.
 <dependency>
     <groupId>eionet</groupId>
     <artifactId>rpcclient</artifactId>
-    <version>3.0</version>
+    <version>3.1-SNAPSHOT</version>
 </dependency>
 
 <dependency>
     <groupId>eionet</groupId>
     <artifactId>definition</artifactId>
-    <version>3.0</version>
+    <version>3.1-SNAPSHOT</version>
 </dependency>
 
 <dependency>
     <groupId>eionet</groupId>
     <artifactId>rpcserver</artifactId>
-    <version>3.0</version>
+    <version>3.1-SNAPSHOT</version>
 </dependency>
 ```
 

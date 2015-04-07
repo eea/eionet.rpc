@@ -6,7 +6,7 @@
 
     <groupId>eionet</groupId>
     <artifactId>rpcserver</artifactId>
-    <version>3.0</version>
+    <version>3.1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>RPC server</name>
 
@@ -21,6 +21,14 @@
             <url>http://archiva.eionet.europa.eu/repository/internal/</url>
             <snapshots>
                 <enabled>false</enabled>
+            </snapshots>
+        </repository>
+        <repository>
+            <id>archiva.snapshots</id>
+            <name>Internal Snapshot Repository</name>
+            <url>http://archiva.eionet.europa.eu/repository/snapshots/</url>
+            <snapshots>
+                <enabled>true</enabled>
             </snapshots>
         </repository>
     </repositories>
@@ -43,12 +51,12 @@
         <dependency>
            <groupId>eionet</groupId>
            <artifactId>definition</artifactId>
-           <version>3.0</version>
+           <version>3.1-SNAPSHOT</version>
         </dependency>
         <dependency>
            <groupId>eionet</groupId>
            <artifactId>acl</artifactId>
-           <version>3.0</version>
+           <version>3.1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>javax.mail</groupId>

@@ -5,6 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>eionet</groupId>
     <artifactId>rpc</artifactId>
+    <version>3.1-SNAPSHOT</version>
     <packaging>pom</packaging>
 
     <properties>
@@ -15,7 +16,6 @@
         <checkstyle.config.location>${main.basedir}/docs/checkstyle.xml</checkstyle.config.location>
     </properties>
 
-    <version>3.0</version>
     <name>Eionet RPC Main POM</name>
     <url>https://github.com/eea/eionet.rpc</url>
 
