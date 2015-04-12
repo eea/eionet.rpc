@@ -41,6 +41,10 @@ Version 3.0
 -----------
 Since version 3.0 there is a change in the way the library is configured.  It uses rpc.properties instead of uit.properties.
 
+Version 3.1
+-----------
+In version 3.1 the package loads the service definition file from the class path if there is no slash or backslash in the file path. This makes it possible to store the file in the JAR.
+
 Castor dependency
 -----------------
 The original castor was version 0.9.3.9 from ExoLab. It has since then started to live by its own. (http://castor.codehaus.org/)
@@ -55,6 +59,8 @@ The package can be configured via JNDI or a properties file. If a environment en
 <Context>
     <Environment name="rpc/componentservices" value="HelpService" type="java.lang.String" override="false"/>
     <Environment name="rpc/acl.admin" value="true" type="java.lang.Boolean" override="false"/>
+    <Environment name="rpc/services.definition.file"
+        value="ServiceFilename.xml" type="java.lang.String" override="false"/>
 </Context>
 ```
 
