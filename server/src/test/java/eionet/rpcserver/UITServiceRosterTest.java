@@ -61,6 +61,13 @@ public class UITServiceRosterTest {
     }
 
     @Test
+    public void getTestServiceFromClassPath() throws Exception {
+        JNDISupport.addPropToTomcat("rpc/services.definition.file", "ServiceFilename.xml");
+        UITServiceIF service = UITServiceRoster.getService("TestService");
+        assertNotNull(service);
+    }
+
+    @Test
     public void badServicesFileName() throws Exception {
         JNDISupport.addPropToTomcat("rpc/services.definition.file", "NoSuchServiceDefinition.xml");
         exception.expect(ServiceException.class);

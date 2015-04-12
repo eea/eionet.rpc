@@ -15,10 +15,11 @@
  * The Original Code code was developed for the European
  * Environment Agency (EEA) under the IDA/EINRC framework contract.
  *
- * Copyright (C) 2000-2002 by European Environment Agency.  All
+ * Copyright (C) 2000-2015 by European Environment Agency.  All
  * Rights Reserved.
  *
  * Original Code: Kaido Laine (TietoEnator)
+ * Contributor: Søren Roug, European Environment Agency
  */
 
 package eionet.rpcserver;
@@ -28,7 +29,9 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.IOException;
+import java.io.Reader;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -57,6 +60,7 @@ public class UITServiceRoster {
     private static HashMap _services;
 
     private static AppUser _user;
+    /** Location of an XML file to parse for a services API. */
     private static String fileName = "";
     //static String rpcExecutePrm = "";
 
@@ -79,7 +83,10 @@ public class UITServiceRoster {
             _services = new HashMap();
             Hashtable<Object, Object> props = loadProperties();
 
-            loadServicesFile(props);
+            fileName = (String) props.get("services.definition.file");
+            if (fileName != null && !fileName.equals("")) {
+                loadServicesFile(fileName);
+            }
             try {
                 //acl admin & help admin services included
                 boolean aclAdmin = false;
@@ -110,28 +117,43 @@ public class UITServiceRoster {
         }
     }
 
-    private static void loadServicesFile(final Hashtable<Object, Object> props) throws ServiceException {
-        File file = null;
-        fileName = (String) props.get("services.definition.file");
-        if (fileName != null && !fileName.equals("")) {
+    /**
+     * Load the API description from a services file.
+     * If the file name contains no "/" or "\", then load from class path.
+     * Otherwise load directly from file system. This makes it possible
+     * to store the file in the JAR.
+     *
+     * @param servicesFileName - The file name of the services file.
+     * @throws ServiceException if it can't load the file.
+     */
+    private static void loadServicesFile(String servicesFileName) throws ServiceException {
+        if (servicesFileName != null && !servicesFileName.equals("")) {
             try {
-                file = new File(fileName);
-
-                FileReader reader = new FileReader(file);
+                Reader reader = null;
+                if (servicesFileName.indexOf('/') >= 0 || servicesFileName.indexOf('\\') >= 0) {
+                    File file = new File(servicesFileName);
+                    reader = new FileReader(file);
+                } else {
+                    InputStream inStream = UITServiceRoster.class.getResourceAsStream("/" + servicesFileName);
+                    if (inStream == null) {
+                        throw new FileNotFoundException(servicesFileName + " not found");
+                    }
+                    reader = new InputStreamReader(inStream);
+                }
                 Services srvs = Services.unmarshal(reader);
                 Service srv[] = srvs.getService();
 
-                for (int i = 0; i < srv.length; i++) {
-                    String srvName = srv[i].getName();
+                for (Service service : srv) {
+                    String srvName = service.getName();
 
                     if (srvName != null) {
-                        _services.put(srv[i].getName(), new ServiceImpl(srv[i]));
+                        _services.put(service.getName(), new ServiceImpl(service));
                     }
                 }
             } catch (FileNotFoundException fe) {
-                throw new ServiceException(fe, "Services file " + file + " not found.");
+                throw new ServiceException(fe, "Services file " + servicesFileName + " not found.");
             } catch (MarshalException me) {
-                throw new ServiceException(me, "Error reading services from file " + file);
+                throw new ServiceException(me, "Error reading services from file " + servicesFileName);
             } catch (ValidationException ve) {
                 throw new ServiceException(ve, "Validation exception " + ve.toString());
             }
@@ -189,6 +211,8 @@ public class UITServiceRoster {
 
     /**
      * Returns service by name.
+     *
+     * @param id - the name of the service.
      */
     public static UITServiceIF getService(String id) throws ServiceException {
         init();
