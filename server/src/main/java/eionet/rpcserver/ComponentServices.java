@@ -27,6 +27,9 @@ import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.StringTokenizer;
 
+/**
+ * Load service names from property called <code>componentservices</code>.
+ */
 public class ComponentServices extends HashMap {
 
     public ComponentServices(Hashtable<Object, Object> props) {
@@ -54,7 +57,7 @@ public class ComponentServices extends HashMap {
                 try {
                     CompServiceImpl impl = new CompServiceImpl(provider);
                     put(service, impl);
-                } catch (ServiceException se){
+                } catch (ServiceException se) {
                    // Ignore problems - should at least unconfigure and log.
                 }
             }

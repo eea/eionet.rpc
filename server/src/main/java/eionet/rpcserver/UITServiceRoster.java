@@ -79,15 +79,10 @@ public class UITServiceRoster {
             _services = new HashMap();
             Hashtable<Object, Object> props = loadProperties();
 
-            File file = null;
+            loadServicesFile(props);
             try {
                 //acl admin & help admin services included
                 boolean aclAdmin = false;
-                try {
-                    fileName = (String) props.get("services.definition.file");
-                } catch(Exception e) {
-                    //e.printStackTrace(System.out);
-                }
 
                 try {
                     Object aclAdminCandidate = props.get("acl.admin");
@@ -99,23 +94,7 @@ public class UITServiceRoster {
                         aclAdmin = Boolean.valueOf(aclAdminCandidate.toString()).booleanValue();
                     }
                 } catch(Exception e) {
-                }
-
-
-                if (fileName != null && !fileName.equals("")) {
-                    file = new File(fileName);
-
-                    FileReader reader = new FileReader(file);
-                    Services srvs = Services.unmarshal(reader);
-                    Service srv[] = srvs.getService();
-
-                    for (int i = 0; i < srv.length; i++) {
-                        String srvName = srv[i].getName();
-
-                        if (srvName != null) {
-                            _services.put(srv[i].getName(), new ServiceImpl(srv[i]));
-                        }
-                    }
+                    aclAdmin = false;
                 }
 
                 // load component services
@@ -125,23 +104,45 @@ public class UITServiceRoster {
                 if (aclAdmin)
                     _services.put("XService", new XServiceImpl());
 
-
-            } catch (FileNotFoundException fe) {
-                fe.printStackTrace(System.out);
-                throw new ServiceException(fe, "File " + file + " not found.");
-            } catch (MarshalException me) {
-                throw new ServiceException(me, "Error reading services from file " + file);
-            } catch (ValidationException ve) {
-                throw new ServiceException(ve, "Validation exception " + ve.toString());
             } catch (Exception e) {
                 throw new ServiceException(e, "Exception " + e.toString());
             }
         }
     }
 
+    private static void loadServicesFile(final Hashtable<Object, Object> props) throws ServiceException {
+        File file = null;
+        fileName = (String) props.get("services.definition.file");
+        if (fileName != null && !fileName.equals("")) {
+            try {
+                file = new File(fileName);
+
+                FileReader reader = new FileReader(file);
+                Services srvs = Services.unmarshal(reader);
+                Service srv[] = srvs.getService();
+
+                for (int i = 0; i < srv.length; i++) {
+                    String srvName = srv[i].getName();
+
+                    if (srvName != null) {
+                        _services.put(srv[i].getName(), new ServiceImpl(srv[i]));
+                    }
+                }
+            } catch (FileNotFoundException fe) {
+                throw new ServiceException(fe, "Services file " + file + " not found.");
+            } catch (MarshalException me) {
+                throw new ServiceException(me, "Error reading services from file " + file);
+            } catch (ValidationException ve) {
+                throw new ServiceException(ve, "Validation exception " + ve.toString());
+            }
+        }
+    }
+
     /**
      * Load the configuration. First try JNDI, then fall back to property files.
+     *
      * @return The properties in a hashtable.
+     * @throws ServiceException if unable to load the properties.
      */
     public static Hashtable<Object, Object> loadProperties() throws ServiceException {
         Hashtable<Object, Object> props = new Hashtable<Object, Object>();
@@ -191,7 +192,7 @@ public class UITServiceRoster {
      */
     public static UITServiceIF getService(String id) throws ServiceException {
         init();
-        return (UITServiceIF)_services.get(id);
+        return (UITServiceIF) _services.get(id);
     }
 
     /**
@@ -204,4 +205,10 @@ public class UITServiceRoster {
       return _services;
     }
 
+    /**
+     * Reset the singleton object for testing.
+     */
+    static void reset() {
+        _services = null;
+    }
 }

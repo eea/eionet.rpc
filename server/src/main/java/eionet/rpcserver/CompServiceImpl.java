@@ -21,6 +21,11 @@
  * Original Code: Jaaus Heinlaid (TietoEnator)
  */
 
+/**
+ * Introspect a class to get its declared RPC methods. The class must have two
+ * methods called <code>methodNames</code> and <code>valueTypes</code>. These
+ * must return an array of String.
+ */
 package eionet.rpcserver;
 
 import java.util.HashMap;
@@ -32,6 +37,8 @@ class CompServiceImpl implements UITServiceIF {
     private HashMap _methods;
     private String[] methodNames = null;
     private String[] valueTypes = null;
+
+    /** Class name to introspect. */
     private String provider = null;
 
     public CompServiceImpl(String provider) throws ServiceException {
@@ -44,7 +51,7 @@ class CompServiceImpl implements UITServiceIF {
     }
 
     public UITMethodIF getMethod(String name) {
-        return (UITMethodIF)_methods.get(name);
+        return (UITMethodIF) _methods.get(name);
     }
 
     public String[] getMethodNames() {
@@ -61,9 +68,9 @@ class CompServiceImpl implements UITServiceIF {
         try {
             Class c = Class.forName(provider);
             java.lang.reflect.Method m = c.getMethod("methodNames", null);
-            methodNames = (String[])m.invoke(null, null);
+            methodNames = (String[]) m.invoke(null, null);
             m = c.getMethod("valueTypes", null);
-            valueTypes = (String[])m.invoke(null, null);
+            valueTypes = (String[]) m.invoke(null, null);
         } catch (Exception e) {
             throw new ServiceException(e.toString());
         }
@@ -87,12 +94,4 @@ class CompServiceImpl implements UITServiceIF {
         }
     }
 
-    public static void main(String[] args){
-
-        try {
-            CompServiceImpl impl = new CompServiceImpl("eionet.help.RemoteService");
-        } catch (Exception e) {
-            e.printStackTrace(System.out);
-        }
-    }
 }

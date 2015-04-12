@@ -7,16 +7,33 @@ import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 import com.meterware.servletunit.ServletRunner;
 import com.meterware.servletunit.ServletUnitClient;
+import java.util.Properties;
 import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.log4j.PropertyConfigurator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
 public class XmlRpcRouterTest {
+
+    /**
+     * Initialize the logging system. It is used by dbunit.
+     */
+    @BeforeClass
+    public static void setupLogger() throws Exception {
+        Properties logProperties = new Properties();
+        logProperties.setProperty("log4j.rootCategory", "DEBUG, CONSOLE");
+        logProperties.setProperty("log4j.appender.CONSOLE", "org.apache.log4j.ConsoleAppender");
+        logProperties.setProperty("log4j.appender.CONSOLE.Threshold", "ERROR");
+        logProperties.setProperty("log4j.appender.CONSOLE.layout", "org.apache.log4j.PatternLayout");
+        logProperties.setProperty("log4j.appender.CONSOLE.layout.ConversionPattern", "- %m%n");
+        PropertyConfigurator.configure(logProperties);
+    }
 
     private void checkRPCContentType(WebResponse response) {
         assertNotNull("No response received", response);

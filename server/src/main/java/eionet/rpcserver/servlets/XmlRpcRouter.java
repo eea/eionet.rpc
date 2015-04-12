@@ -1,4 +1,4 @@
-/**
+/*
  * The contents of this file are subject to the Mozilla Public
  * License Version 1.1 (the "License"); you may not use this file
  * except in compliance with the License. You may obtain a copy of
@@ -58,7 +58,7 @@ public class XmlRpcRouter extends HttpServlet {
     public XmlRpcServer xmlrpc;
 
     /**
-     * gets the service defs from the roster.
+     * Gets the service defs from the roster.
      */
     public void init(ServletConfig config) throws ServletException {
 
@@ -91,12 +91,6 @@ public class XmlRpcRouter extends HttpServlet {
      */
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
-        /*
-        System.out.println("=============================");
-        System.out.println("============POST ============");
-        System.out.println("=============================");
-
-        */
         byte[] result = null;
         //authorization here!
 
